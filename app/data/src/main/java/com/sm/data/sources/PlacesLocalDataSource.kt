@@ -1,12 +1,14 @@
 package com.sm.data.sources
 
+import com.sm.data.db.daos.LocationPlacesDao
+import com.sm.data.db.entities.LocationPlacesItem
 import com.sm.domain.models.LocPoint
 import com.sm.domain.models.LocationPlaces
 import com.sm.domain.sources.PlacesDataSource
 
-class PlacesLocalDataSource: PlacesDataSource {
-
-    private var lastQuery: Pair<String, LocationPlaces>? = null
+class PlacesLocalDataSource(
+    private val locationPlacesDao: LocationPlacesDao
+): PlacesDataSource {
 
     private fun generateQueryId(
         lowerLeftCorner: LocPoint,
@@ -22,11 +24,7 @@ class PlacesLocalDataSource: PlacesDataSource {
         limit: Int
     ): LocationPlaces? {
         val id = generateQueryId(lowerLeftCorner, upperRightCorner, category, limit)
-        return if (lastQuery?.first == id) {
-            lastQuery?.second
-        } else {
-            null
-        }
+        return locationPlacesDao.getItem(id)?.value
     }
 
     override suspend fun saveLastQuery(
@@ -37,7 +35,9 @@ class PlacesLocalDataSource: PlacesDataSource {
         response: LocationPlaces
     ) {
         val id = generateQueryId(lowerLeftCorner, upperRightCorner, category, limit)
-        lastQuery = id to response
+        locationPlacesDao.deleteAllItems()
+        val item = LocationPlacesItem(id, response)
+        locationPlacesDao.insertItem(item)
     }
 
 }
