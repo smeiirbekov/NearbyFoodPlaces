@@ -10,6 +10,7 @@ buildscript {
         kotlin_version = '1.5.31'
         kotlinx_version = '1.5.1'
         dagger_hilt_version = '2.38.1'
+        room_version = '2.3.0'
     }
     repositories {
         google()
@@ -21,6 +22,15 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$dagger_hilt_version"
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.0"
+    }
+}
+
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            /* Bugfix for M1 Apple Silicon Arctic Fox Android Studio version */
+            force 'org.xerial:sqlite-jdbc:3.34.0'
+        }
     }
 }
 

@@ -6,6 +6,8 @@ import com.sm.api.PLACES_BASE_URL
 import com.sm.api.PlacesApi
 import com.sm.api.base.ApiBuilder
 import com.sm.data.base.MoshiSerializer
+import com.sm.data.db.Database
+import com.sm.data.db.converters.LocationPlacesConverters
 import com.sm.data.repositories.LocationRepositoryImpl
 import com.sm.data.repositories.PlacesRepositoryImpl
 import com.sm.data.sources.PlacesLocalDataSource
@@ -34,9 +36,17 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideJsonSerializer(): JsonSerializer = MoshiSerializer(
-        Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-    )
+    fun provideJsonSerializer(): JsonSerializer {
+        val serializer = MoshiSerializer(
+            Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        )
+        LocationPlacesConverters.inject(serializer)
+        return serializer
+    }
+
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context) = Database.create(context)
 
     @Singleton
     @Provides
@@ -49,7 +59,9 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providePlacesLocalDataSource(): PlacesDataSource = PlacesLocalDataSource()
+    fun providePlacesLocalDataSource(
+        database: Database
+    ): PlacesDataSource = PlacesLocalDataSource(database.locationPlaces())
 
     @Singleton
     @Provides
