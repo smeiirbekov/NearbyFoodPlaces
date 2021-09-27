@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'kotlin-kapt'
+}
+
+java {
+    sourceCompatibility = jvmVersionValue
+    targetCompatibility = jvmVersionValue
+}
+
+dependencies {
+    api project(":app:domain")
+}

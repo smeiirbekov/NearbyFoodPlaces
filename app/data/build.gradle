@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion compileSdkValue
+    defaultConfig {
+        minSdkVersion minSdkValue
+        targetSdkVersion compileSdkValue
+    }
+    compileOptions {
+        sourceCompatibility jvmVersionValue
+        targetCompatibility jvmVersionValue
+    }
+    kotlinOptions.jvmTarget = jvmVersionValue.toString()
+}
+
+dependencies {
+    api project(":app:api")
+    api 'com.google.android.gms:play-services-location:18.0.0'
+}

@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">NearbyFoodPlaces</string>
+
+    <string name="error_connection">Connection error!</string>
+    <string name="error_unknown">Unknown error!</string>
+
+</resources>
